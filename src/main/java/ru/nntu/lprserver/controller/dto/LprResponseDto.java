@@ -1,13 +1,15 @@
 package ru.nntu.lprserver.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class LicensePlateRecognitionResponseDto {
+@AllArgsConstructor
+public class LprResponseDto {
 
     private String number;
 
-    private BigDecimal confidence;
+    private float confidence;
 }
