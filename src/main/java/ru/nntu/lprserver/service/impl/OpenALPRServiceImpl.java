@@ -1,19 +1,17 @@
 package ru.nntu.lprserver.service.impl;
 
-import com.openalpr.jni.*;
+import com.openalpr.jni.Alpr;
+import com.openalpr.jni.AlprException;
+import com.openalpr.jni.AlprPlate;
+import com.openalpr.jni.AlprResults;
 import org.springframework.stereotype.Service;
 import ru.nntu.lprserver.model.LprResult;
 import ru.nntu.lprserver.model.SupportedCountry;
+import ru.nntu.lprserver.model.exception.LprErrorException;
 import ru.nntu.lprserver.service.LprService;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static ru.nntu.lprserver.model.SupportedCountry.EUROPE;
-import static ru.nntu.lprserver.model.SupportedCountry.UNITED_STATES;
+import java.util.Optional;
 
 @Service
 public class OpenALPRServiceImpl implements LprService {
@@ -24,44 +22,32 @@ public class OpenALPRServiceImpl implements LprService {
     // TODO: make this variable configurable
     private static final String ALPR_RUNTIME_DIR_PATH = "./runtime_data";
 
-    private final Map<SupportedCountry, Alpr> alprs = new HashMap<>();
-
-    @PostConstruct
-    private void init() {
-        alprs.put(UNITED_STATES,
-                new Alpr(UNITED_STATES.getCode(), ALPR_CONFIGURATION_FILE_PATH, ALPR_RUNTIME_DIR_PATH));
-        alprs.put(EUROPE,
-                new Alpr(EUROPE.getCode(), ALPR_CONFIGURATION_FILE_PATH, ALPR_RUNTIME_DIR_PATH));
-    }
-
-    @PreDestroy
-    private void destroy() {
-        for (Alpr alpr: alprs.values()) {
-            alpr.unload();
-        }
-    }
-
     @Override
-    public LprResult recognize(byte[] imageData, SupportedCountry country) {
+    public Optional<LprResult> recognize(byte[] imageData, SupportedCountry country) {
+        Alpr alpr = null;
         try {
-            Alpr alpr = alprs.get(country);
+            alpr = new Alpr(country.getCode(), ALPR_CONFIGURATION_FILE_PATH, ALPR_RUNTIME_DIR_PATH);
             AlprResults results = alpr.recognize(imageData);
             if (results.getPlates().isEmpty()) {
-                return null;
+                return Optional.empty();
             }
 
             List<AlprPlate> topPlates = results.getPlates().get(0).getTopNPlates();
-
             if (topPlates.isEmpty()) {
-                return null;
+                return Optional.empty();
             }
 
             AlprPlate result = topPlates.get(0);
 
-            return new LprResult(result.getCharacters(), result.getOverallConfidence());
+            return Optional.of(new LprResult(result.getCharacters(), result.getOverallConfidence()));
         } catch (AlprException e) {
-            // TODO: change it
-            throw new IllegalArgumentException();
+            throw new LprErrorException("License plate recognition error happened", e);
+        } finally {
+            if (alpr != null) {
+                if (alpr.isLoaded()) {
+                    alpr.unload();
+                }
+            }
         }
     }
 }

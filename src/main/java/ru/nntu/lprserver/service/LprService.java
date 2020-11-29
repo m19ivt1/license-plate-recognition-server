@@ -3,7 +3,9 @@ package ru.nntu.lprserver.service;
 import ru.nntu.lprserver.model.LprResult;
 import ru.nntu.lprserver.model.SupportedCountry;
 
+import java.util.Optional;
+
 public interface LprService {
 
-    LprResult recognize(byte[] imageData, SupportedCountry country);
+    Optional<LprResult> recognize(byte[] imageData, SupportedCountry country);
 }
