@@ -4,6 +4,7 @@ import com.openalpr.jni.Alpr;
 import com.openalpr.jni.AlprException;
 import com.openalpr.jni.AlprPlate;
 import com.openalpr.jni.AlprResults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.nntu.lprserver.model.LprResult;
 import ru.nntu.lprserver.model.SupportedCountry;
@@ -13,20 +14,23 @@ import ru.nntu.lprserver.service.LprService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@code LprService} which uses open source {@code OpenALPR} library.
+ */
 @Service
 public class OpenALPRServiceImpl implements LprService {
 
-    // TODO: make this variable configurable
-    private static final String ALPR_CONFIGURATION_FILE_PATH = "openalpr.conf";
+    @Value("${openalpr.configuration-file-path}")
+    private String openAlprConfigurationFilePath;
 
-    // TODO: make this variable configurable
-    private static final String ALPR_RUNTIME_DIR_PATH = "./runtime_data";
+    @Value("${openalpr.runtime-dir-path}")
+    private String openAlprRuntimeDirPath;
 
     @Override
     public Optional<LprResult> recognize(byte[] imageData, SupportedCountry country) {
         Alpr alpr = null;
         try {
-            alpr = new Alpr(country.getCode(), ALPR_CONFIGURATION_FILE_PATH, ALPR_RUNTIME_DIR_PATH);
+            alpr = new Alpr(country.getCode(), openAlprConfigurationFilePath, openAlprRuntimeDirPath);
             AlprResults results = alpr.recognize(imageData);
             if (results.getPlates().isEmpty()) {
                 return Optional.empty();

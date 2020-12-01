@@ -15,6 +15,9 @@ import ru.nntu.lprserver.service.LprService;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Controller which implements {@code /lpr} REST API service.
+ */
 @RestController
 @RequestMapping("lpr")
 public class LprController {
@@ -22,6 +25,12 @@ public class LprController {
     @Autowired
     private LprService lprService;
 
+    /**
+     * Handles {@link LprErrorException} exceptions.
+     *
+     * @param e exception object
+     * @return HTTP response
+     */
     @ExceptionHandler(LprErrorException.class)
     public ResponseEntity<ErrorResponseDto> handleInternalError(LprErrorException e) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto();
@@ -30,6 +39,13 @@ public class LprController {
                 .body(errorResponseDto);
     }
 
+    /**
+     * Implements {@code /lpr/recognize} REST API endpoint.
+     *
+     * @param licensePlateImage license plate image
+     * @param countryCode requested country code
+     * @return HTTP response
+     */
     @PostMapping("/recognize")
     public ResponseEntity<LprResponseDto> recognize(
             @RequestParam("license_plate_image") MultipartFile licensePlateImage,
