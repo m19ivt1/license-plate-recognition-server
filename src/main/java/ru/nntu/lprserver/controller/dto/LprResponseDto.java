@@ -10,7 +10,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class LprResponseDto {
 
+    /**
+     * Recognized number.
+     */
     private String number;
 
+    /**
+     * Recognition confidence.
+     */
     private float confidence;
 }
