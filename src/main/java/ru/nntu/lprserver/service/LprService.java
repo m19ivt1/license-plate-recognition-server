@@ -15,7 +15,7 @@ public interface LprService {
      *
      * @param imageData array of bytes which represents image
      * @param country   requested country code
-     * @return {@code LprResult} object which contains recognized license plate and result's confidence
+     * @return {@code LprResult} object which contains recognized license plate and result's confidence, is optional
      */
     Optional<LprResult> recognize(byte[] imageData, SupportedCountry country);
 }

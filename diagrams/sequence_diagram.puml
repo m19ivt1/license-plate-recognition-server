@@ -1,0 +1,36 @@
+@startuml
+
+actor user as "Пользователь"
+
+participant client as "Android клиент"
+participant controller as "LprController"
+participant service as "OpenALPRServiceImpl"
+participant openalpr as "OpenALPR"
+
+user -> client: Делает фотографию\nавтомобиля
+activate user
+activate client
+client -> controller: **[POST]** /lpr/recognize
+note right of client
+Multipart-запрос
+содержит
+фотографию и
+код страны
+end note
+activate controller
+controller -> controller: Валидация\nзапроса
+controller -> service: **[Java]** recognize
+activate service
+service -> openalpr: **[JNI]** recognize
+activate openalpr
+openalpr --> service
+deactivate openalpr
+service --> controller
+deactivate service
+controller --> client: JSON
+deactivate controller
+client --> user: Показывает\nномер автомобиля
+deactivate client
+deactivate user
+
+@enduml

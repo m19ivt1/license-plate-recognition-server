@@ -29,3 +29,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs directory ###
+.logs
+
+### Library DLL files ###
+*.dll
+
+### OpenALPR configuration ###
+openalpr.conf
+runtime_data
