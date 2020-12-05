@@ -16,8 +16,8 @@ License plate recognition server
   Inversion of Control-контейнер и MVC фреймворк
 * [Lombok](https://projectlombok.org) - популярная библиотека для автоматического генерирования повторяющегося кода
   в Java классах
-* [OpenALPR](https://github.com/openalpr/openalpr) - библиотека для распозавания автомобильных номеров и её *обёртки*
-  для разных языков программирования (в то числе для Java), использует лицензию
+* [OpenALPR](https://github.com/openalpr/openalpr) - библиотека для распознавания автомобильных номеров и её *обёртки*
+  для разных языков программирования (в том числе для Java), использует лицензию
   [AGPL-3.0 License](https://github.com/openalpr/openalpr/blob/master/LICENSE)
 * [Logback](http://logback.qos.ch) - фреймворк логирования
 
