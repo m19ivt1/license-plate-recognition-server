@@ -37,10 +37,18 @@ git clone https://github.com/m19ivt1/license-plate-recognition-server.git
 Помимо *.dll* файлов в корневую директорию необходимо скопировать папку **runtime_data** и файл
 **openalpr.conf**. Они содержат конфигурационные данные, необходимые для корректной работы *OpenALPR*.
 
-После подготовительных этапов можно скомпилировать проект:
+После подготовительных этапов можно скомпилировать проект.
+
+Windows:
 ```shell
-mvn package
+.\mvnw.cmd package
 ```
+
+Linux:
+```shell
+./mvnw package
+```
+
 Результатом сборки будет файл **lprserver-1.0.0.jar** в папке **target**. Чтобы запустить его, выполните команду:
 ```shell
 java -jar target/lprserver-1.0.0.jar
